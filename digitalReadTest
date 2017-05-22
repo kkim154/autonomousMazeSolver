@@ -1,0 +1,49 @@
+int leftsensor = 2;
+int frontsensor = 3;
+int backL = 4;
+
+void setup() {
+  pinMode(leftsensor,INPUT);
+  pinMode(frontsensor,INPUT);
+  pinMode(backL,INPUT);
+  Serial.begin(9600);
+}
+
+//21 centimeters
+void loop() {
+  int left = valueLeft();
+  int front = valueFront();
+  int backL = valueBackL();
+
+  
+  Serial.println(left);
+  
+  Serial.println(front);
+
+  Serial.println(backL);
+  delay(1000);
+}
+
+int valueLeft(){
+  return Read(leftsensor);
+}
+
+int valueFront(){
+  return Read(frontsensor);
+}
+
+int valueBackL(){
+  return Read(backL);
+}
+
+int Read(int pin){  
+  pinMode( pin, OUTPUT );
+  digitalWrite( pin, HIGH );  
+  delayMicroseconds(10);
+  pinMode( pin, INPUT );
+  long time = micros();
+  //time how long the input is HIGH, but quit after 3ms as nothing happens after that
+  while (digitalRead(pin) == HIGH && micros() - time < 3000); 
+  int diff = micros() - time;
+  return diff;
+}
